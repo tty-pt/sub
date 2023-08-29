@@ -1,0 +1,28 @@
+{
+    "esModuleInterop": true,
+    "compilerOptions": {
+        "outDir": "./dist/",
+        "sourceMap": true,
+        "strictNullChecks": true,
+        "module": "nodeNext",
+        "jsx": "react",
+        "target": "es5",
+        "allowJs": true,
+	"declaration": true,
+        "moduleResolution": "NodeNext",
+        "allowSyntheticDefaultImports": true,
+	"downlevelIteration": true,
+        "lib": [
+            "es2017",
+            "dom"
+        ],
+        "types": [
+            "node"
+        ]
+    },
+    "include": [
+        "./src/",
+        "./lib/"
+    ],
+    "transform": {}
+}
