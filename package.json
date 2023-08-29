@@ -1,0 +1,43 @@
+{
+  "name": "libsub",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json",
+    "./dist/*": "./dist/*"
+  },
+  "@tty-pt/scripts": {
+    "entry": "./src/main.tsx",
+    "development": true,
+    "library": true
+  },
+  "scripts": {
+    "test": "echo no tests #scripts test",
+    "build": "scripts build",
+    "watch": "scripts watch",
+    "lint": "scripts lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tty-pt/sub.git"
+  },
+  "keywords": [
+    "subscription",
+    "trigger",
+    "remote",
+    "changes"
+  ],
+  "author": "Paulo Quirino <quirinpa@gmail.com>",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/tty-pt/sub/issues"
+  },
+  "homepage": "https://github.com/tty-pt/sub#readme",
+  "devDependencies": {
+    "@tty-pt/scripts": "^0.1.6"
+  }
+}
