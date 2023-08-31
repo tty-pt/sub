@@ -3,16 +3,18 @@
   "version": "1.0.3",
   "description": "",
   "main": "dist/main.js",
-  "types": "./dist/main.d.ts",
+  "types": "./src/main.d.ts",
+  "type": "commonjs",
   "exports": {
     ".": {
       "default": "./dist/main.js"
     },
     "./package.json": "./package.json",
-    "./dist/*": "./dist/*"
+    "./dist/*": "./dist/*",
+    "./src/*": "./src/*"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "rm -rf dist ; tsc"
   },
   "repository": {
     "type": "git",
@@ -30,8 +32,12 @@
     "url": "https://github.com/tty-pt/sub/issues"
   },
   "homepage": "https://github.com/tty-pt/sub#readme",
-  "files": ["dist"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "devDependencies": {
+    "@types/react": "^16.14.45",
     "typescript": "^5.2.2"
   }
 }

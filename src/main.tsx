@@ -1,25 +1,15 @@
-export
-interface Sub<T extends any> {
-  update: (val: T) => Promise<any>;
-  subscribe: Function;
-  data: {
-    value: T;
-  };
-  makeEmit: (cb: Function) => (...args: any[]) => Promise<T>;
-}
-
-type setState<T extends any> = (newState: T) => void;
+import { Emit, EmitNow, Sub, setState } from "./types";
+export { Emit, EmitNow, Sub } from "./types";
 
 export
 function makeSub<T extends any>(defaultData: T): Sub<T> {
   const subs = new Map<Function, boolean>();
-  const valueMap = { value: defaultData };
+  const valueMap: { value: T } = { value: defaultData };
 
-  async function update(obj: T): Promise<T> {
+  function update(obj: T): T {
     valueMap.value = obj;
-    let allPromises = [] as any[];
     for (const [sub] of subs)
-      allPromises.push(sub(obj));
+      sub(obj);
     return obj;
   }
 
@@ -31,19 +21,22 @@ function makeSub<T extends any>(defaultData: T): Sub<T> {
     };
   }
 
-  function makeEmit(cb: Function|undefined) {
-    return async (...args: any[]) => {
-      let value : T | undefined;
-
-      try {
-        value = await (cb ?? ((a: T) => a))(...args, valueMap.value);
-      } catch (e) {
-        return Promise.reject(null)
-      }
-
-      return update(value as T)
+  function makeEmitNow(cb: EmitNow<T> = (a: T) => a) {
+    return (...args: any[]) => {
+      return update((cb ?? ((a: T) => a))(valueMap.value, ...args) as T);
     };
   }
 
-  return { update, subscribe, data: valueMap, makeEmit };
+  function makeEmit(cb: Emit<T> = (a: T): Promise<T> | T => a) {
+    return async (...args: any[]) => {
+
+      try {
+        return update(await (cb ?? ((a: T) => a))(valueMap.value, ...args));
+      } catch (e) {
+        return Promise.reject(undefined);
+      }
+    };
+  }
+
+  return { update, subscribe, data: valueMap, makeEmit, makeEmitNow };
 }
