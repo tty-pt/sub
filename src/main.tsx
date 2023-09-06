@@ -21,13 +21,13 @@ function makeSub<T extends any>(defaultData: T): Sub<T> {
     };
   }
 
-  function makeEmitNow(cb: EmitNow<T> = (a: T) => a) {
+  function makeEmitNow(cb: EmitNow<T> = (_old: T, a: T) => a) {
     return (...args: any[]) => {
       return update((cb ?? ((a: T) => a))(valueMap.value, ...args) as T);
     };
   }
 
-  function makeEmit(cb: Emit<T> = (a: T): Promise<T> | T => a) {
+  function makeEmit(cb: Emit<T> = (_old: T, a: T): Promise<T> | T => a) {
     return async (...args: any[]) => {
 
       try {

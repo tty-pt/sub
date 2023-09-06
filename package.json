@@ -1,6 +1,6 @@
 {
   "name": "@tty-pt/sub",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "",
   "main": "dist/main.js",
   "types": "./src/main.d.ts",
@@ -14,7 +14,7 @@
     "./src/*": "./src/*"
   },
   "scripts": {
-    "build": "rm -rf dist ; tsc"
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
