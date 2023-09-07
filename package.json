@@ -1,10 +1,11 @@
 {
   "name": "@tty-pt/sub",
-  "version": "1.0.6",
+  "version": "1.0.12",
   "description": "",
   "main": "dist/main.js",
   "types": "./src/main.d.ts",
-  "type": "commonjs",
+  "entry": "./src/main.tsx",
+  "library": true,
   "exports": {
     ".": {
       "default": "./dist/main.js"
@@ -14,7 +15,7 @@
     "./src/*": "./src/*"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "scripts build"
   },
   "repository": {
     "type": "git",
@@ -37,6 +38,7 @@
     "src"
   ],
   "devDependencies": {
+    "@tty-pt/scripts": "0.1.9",
     "@types/react": "^16.14.45",
     "typescript": "^5.2.2"
   }
