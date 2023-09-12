@@ -1,8 +1,9 @@
 {
   "name": "@tty-pt/sub",
-  "version": "1.0.12",
+  "version": "1.1.1",
   "description": "",
-  "main": "dist/main.js",
+  "main": "dist/main.umd.js",
+  "module": "dist/main.js",
   "types": "./src/main.d.ts",
   "entry": "./src/main.tsx",
   "library": true,
@@ -15,7 +16,7 @@
     "./src/*": "./src/*"
   },
   "scripts": {
-    "build": "scripts build"
+    "build": "tsc && scripts build"
   },
   "repository": {
     "type": "git",
@@ -38,7 +39,7 @@
     "src"
   ],
   "devDependencies": {
-    "@tty-pt/scripts": "0.1.9",
+    "@tty-pt/scripts": "^0.2.0",
     "@types/react": "^16.14.45",
     "typescript": "^5.2.2"
   }
