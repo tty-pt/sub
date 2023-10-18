@@ -1,9 +1,17 @@
 lockfileVersion: '6.0'
 
+dependencies:
+  lodash:
+    specifier: ^4.17.21
+    version: 4.17.21
+
 devDependencies:
   '@tty-pt/scripts':
-    specifier: ^0.2.0
-    version: 0.2.0(@types/node@18.17.15)(@types/react-dom@17.0.20)(@types/react@16.14.45)(@types/testing-library__jest-dom@5.14.9)(esbuild@0.18.20)
+    specifier: ^0.2.1
+    version: 0.2.1(@types/node@18.17.15)(@types/react-dom@17.0.20)(@types/react@16.14.45)(@types/testing-library__jest-dom@5.14.9)(esbuild@0.18.20)
+  '@types/lodash':
+    specifier: ^4.14.200
+    version: 4.14.200
   '@types/react':
     specifier: ^16.14.45
     version: 16.14.45
@@ -3532,8 +3540,8 @@ packages:
     engines: {node: '>=10.13.0'}
     dev: true
 
-  /@tty-pt/scripts@0.2.0(@types/node@18.17.15)(@types/react-dom@17.0.20)(@types/react@16.14.45)(@types/testing-library__jest-dom@5.14.9)(esbuild@0.18.20):
-    resolution: {integrity: sha512-R0Vc83LdgVU0nG327lhCkxDyOoFvjNuwIz+rX5nsrBKbRwtv4aKKwH33tfiraYSfWhblXV8VLuVNQ9pNG5IL6g==}
+  /@tty-pt/scripts@0.2.1(@types/node@18.17.15)(@types/react-dom@17.0.20)(@types/react@16.14.45)(@types/testing-library__jest-dom@5.14.9)(esbuild@0.18.20):
+    resolution: {integrity: sha512-EpklIbFM2+pHqFjKYLxUEVB8fNOg8NEKRo7WL3Kwp8YgnKq8yWvxHpwcRr9dHlCbFqpnKRbAVa3HL2qckMFPcg==}
     hasBin: true
     peerDependencies:
       '@types/node': ^18.0.0
@@ -3769,6 +3777,10 @@ packages:
     resolution: {integrity: sha512-Hr5Jfhc9eYOQNPYO5WLDq/n4jqijdHNlDXjuAQkkt+mWdQR+XJToOHrsD4cPaMXpn6KO7y2+wM8AZEs8VpBLVA==}
     dev: true
 
+  /@types/lodash@4.14.200:
+    resolution: {integrity: sha512-YI/M/4HRImtNf3pJgbF+W6FrXovqj+T+/HpENLTooK9PnkacBsDpeP3IpHab40CClUfhNmdM2WTNP2sa2dni5Q==}
+    dev: true
+
   /@types/mime-types@2.1.1:
     resolution: {integrity: sha512-vXOTGVSLR2jMw440moWTC7H19iUyLtP3Z1YTj7cSsubOICinjMxFeb/V57v9QdyyPGbbWolUFSSmSiRSn94tFw==}
     dev: true
@@ -3784,7 +3796,7 @@ packages:
   /@types/node-fetch@2.6.4:
     resolution: {integrity: sha512-1ZX9fcN4Rvkvgv4E6PAY5WXUFWFcRWxZa3EW83UjycOB9ljJCedb2CupIP4RZMEwF/M3eTcCihbBRgwtGbg5Rg==}
     dependencies:
-      '@types/node': 16.18.50
+      '@types/node': 20.6.0
       form-data: 3.0.1
     dev: true
 
@@ -7774,7 +7786,6 @@ packages:
 
   /lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
-    dev: true
 
   /log-symbols@4.1.0:
     resolution: {integrity: sha512-8XPvpAA8uyhfteu8pIvQxpJZ7SYYdpUivZpGy6sFsBuKRY/7rQGavedeB8aK+Zkyq6upMFVL/9AW6vOYzfRyLg==}
