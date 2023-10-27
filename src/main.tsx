@@ -1,36 +1,30 @@
+import { useEffect, useState } from "react";
 import { cloneDeep, set, get } from "lodash";
-
-export
-function emit(path = "") {
-  return function emit(_target: any, propertyKey: string, descriptor: any) {
-    const originalMethod = descriptor.value;
-
-    descriptor.value = function(...args: any[]) {
-      this._path = path;
-      const ret = this.update(originalMethod.call(this, ...args), path);
-      const reArgs = [ret, this._path, ...args];
-      this.echo("emit", propertyKey, ...reArgs);
-      this.echo("emit " + propertyKey, ...reArgs);
-      return ret;
-    };
-
-    return descriptor;
-  }
-}
 
 export
 function reflect(path = "", advanced?: boolean) {
   return function (_target: any, key: string, descriptor: any) {
+    if (descriptor.value && typeof descriptor.value === 'function') {
+      const originalMethod = descriptor.value;
+      descriptor.value = function(...args: any[]) {
+        this._path = path;
+        const ret = this.update(originalMethod.call(this, ...args));
+        const reArgs = [ret, this._path, ...args];
+        this.echo("emit", key, ...reArgs);
+        this.echo("emit " + key, ...reArgs);
+        return ret;
+      };
+      return descriptor;
+    }
+
     const originalSetter = descriptor.set;
     const originalGetter = descriptor.get;
-
-    if (descriptor.hasOwnProperty('value'))
-      delete descriptor.value;
 
     if (descriptor.hasOwnProperty('writable'))
       delete descriptor.writable;
 
     descriptor.set = function(value: any) {
+      const remember = this._path;
       this._path = (path ? path + "." : "") + key;
       let args = [this._path, value];
       this.echo("pre set", key, ...args);
@@ -40,7 +34,9 @@ function reflect(path = "", advanced?: boolean) {
       if (originalSetter)
         originalSetter.call(this, value)
 
-      this.update(this._target, this._path, advanced);
+      if (this.diff(this._target, this._path))
+        this.update(this._target, undefined, advanced);
+      this._path = remember;
       args = [this._path, value, this._target, this._value];
       this.echo("set", key, ...args);
       this.echo("set " + key, ...args);
@@ -61,30 +57,27 @@ function reflect(path = "", advanced?: boolean) {
 }
 
 interface Value {
-  url: string;
+  url?: string;
 }
 
 export
-class Sub<T extends Value> {
+class Sub<T> {
   _subs = new Map();
   _value: T;
-  _react: any;
-  _url: string = "initial";
+  _url: string = "default";
   _path: string;
   _target: any;
   _debug: string[] = [];
   _name: string = "Default";
-  _suffix: string;
+  _suffix: string = "default";
 
   constructor(
-    name: string,
-    defaultData: T,
-    react: any,
+    defaultData: T = { } as T,
+    name: string = "Sub",
   ) {
     this._name = name;
     this._debug = (window.localStorage.getItem("@tty-pt/sub/" + name + "/debug") ?? "").split(",");
     this._value = defaultData;
-    this._react = react;
   }
 
   echo(key: string, ret: any, ...args: any[]) {
@@ -108,13 +101,6 @@ class Sub<T extends Value> {
     return this._url + "/" + this._suffix;
   }
 
-  reindex(path: string, obj?: any) {
-    const resolved = this.replace(path, obj ?? this.get(path));
-    const io = resolved.indexOf(".");
-    const len = io < 0 ? resolved.length : io;
-    return this.replace(io < 0 ? resolved : resolved.substring(0, len));
-  }
-
   isValidSuffix(_suffix: string) {
     return false;
   }
@@ -135,7 +121,7 @@ class Sub<T extends Value> {
   }
 
   get url() {
-    return this._value.url;
+    return (this._value as Value).url as string;
   }
 
   get debug() {
@@ -152,17 +138,17 @@ class Sub<T extends Value> {
     return old !== obj;
   }
 
-  update(obj: T|any, path: string = "", advanced: boolean = false) {
-    const resolved = this.replace(path, obj);
+  update(obj: T|any, path: string = this._path, advanced: boolean = false) {
+    const resolved = this.replace(path);
     let change = false;
     this.echo("pre update", obj, path, resolved);
 
     change = obj !== this.get(path);
-    const ret = this.set(obj, advanced ? "" : this.replace(path, obj));
+    const ret = this.set(obj, advanced ? "" : this.replace(path));
 
     for (const [sub, path] of this._subs) {
       const value = this.get(path, ret);
-      const resolved = this.replace(path, value);
+      const resolved = this.replace(path);
       if (this.diff(value, resolved)) {
         sub(value);
         change = true;
@@ -172,8 +158,7 @@ class Sub<T extends Value> {
     if (change)
       this._value = ret;
 
-    this.echo("update", path, resolved, obj, ret, this._value);
-    return advanced ? this.get(path, obj) : obj;
+    return this.echo("update", advanced ? this.get(path, ret) : ret, path, resolved, obj, ret, this._value);
   }
 
   current() {
@@ -186,41 +171,41 @@ class Sub<T extends Value> {
     return ret;
   }
 
-  parse(key: string, data: any) {
+  parse(key: string) {
     if (!key.startsWith("$"))
       return key;
 
     switch (key) {
       case "$url": return this._url + "/" + this._suffix;
       case "$suf": return this._suffix;
-      default: return data?.[key];
+      default: return this._value[key];
     }
   }
 
-  replace(path = "", value?: any) {
-    const data = this.set(value, path);
-    const keys = path.split('/').map(key => key.split(".").map(ckey => this.parse(ckey, data)).join("."));
-    return this.echo("replace", keys.join("/"), data, path);
+  replace(path = this.index) {
+    const keys = path.split('/').map(key => key.split(".").map(ckey => this.parse(ckey)).join("."));
+    const realPath = keys.join("/");
+    return this.echo("replace", realPath, path);
   }
 
-  get(path = "", value ?: any) {
+  get(path: string = this._path, value: T = this._value) {
     value = value ?? this._value;
-    const realPath = this.replace(path, value);
-    return realPath ? get(value, realPath.replace(".", "/")) : value;
+    const realPath = this.replace(path);
+    return this.echo("global get", path ? get(value, realPath) : value, path, realPath, value);
   }
 
-  use(path = "") {
-    const [value, setValue] = this._react.useState(this.get(path));
+  subscribe(setValue: Function, path: string = "") {
+    const sub = setValue;
+    sub(this.get(path));
+    this._subs.set(sub, path);
+    return () => {
+      this._subs.delete(sub);
+    };
+  }
 
-    this._react.useEffect(() => {
-      const sub = setValue;
-      sub(this.get(path));
-      this._subs.set(sub, path);
-      return () => {
-        this._subs.delete(sub);
-      };
-    }, [path]);
-
+  use(path = this.index) {
+    const [value, setValue] = useState(this.get(path));
+    useEffect(() => this.subscribe(setValue, path), [path]);
     return this.echo("use", value, path);
   }
 }
