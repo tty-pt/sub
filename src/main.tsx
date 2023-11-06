@@ -124,6 +124,10 @@ class Sub<T> {
     return (this._value as Value).url as string;
   }
 
+  get value() {
+    return this._value;
+  }
+
   get debug() {
     return this._debug;
   }
@@ -203,9 +207,15 @@ class Sub<T> {
     };
   }
 
-  use(path = this.index) {
+  use(path = "") {
     const [value, setValue] = useState(this.get(path));
     useEffect(() => this.subscribe(setValue, path), [path]);
     return this.echo("use", value, path);
+  }
+
+  makeEmit(cb: Function = (a: any) => a, path: string = "") {
+    return (...args: any[]) => {
+      this.update(cb.call(this, ...args), path);
+    }
   }
 }
