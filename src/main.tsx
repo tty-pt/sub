@@ -142,7 +142,7 @@ class Sub<T> {
     return old !== obj;
   }
 
-  update(obj: T|any, path: string = this._path, advanced: boolean = false) {
+  update(obj: T|any, path: string = "", advanced: boolean = false) {
     const resolved = this.replace(path);
     let change = false;
     this.echo("pre update", obj, path, resolved);
@@ -192,7 +192,7 @@ class Sub<T> {
     return this.echo("replace", realPath, path);
   }
 
-  get(path: string = this._path, value: T = this._value) {
+  get(path: string = "", value: T = this._value) {
     value = value ?? this._value;
     const realPath = this.replace(path);
     return this.echo("global get", path ? get(value, realPath) : value, path, realPath, value);
@@ -210,7 +210,7 @@ class Sub<T> {
   use(path = "") {
     const [value, setValue] = useState(this.get(path));
     useEffect(() => this.subscribe(setValue, path), [path]);
-    return this.echo("use", value, path);
+    return this.echo("use", this.get(path), value, path);
   }
 
   makeEmit(cb: Function = (a: any) => a, path: string = "") {
