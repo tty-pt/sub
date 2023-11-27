@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, ComponentType } from "react";
 import { cloneDeep, set, get } from "lodash";
 
 export
@@ -8,7 +8,7 @@ function reflect(path = "", advanced?: boolean) {
       const originalMethod = descriptor.value;
       descriptor.value = function(...args: any[]) {
         this._path = path;
-        const ret = this.update(originalMethod.call(this, ...args));
+        const ret = this.update(originalMethod.call(this, ...args), this._path);
         const reArgs = [ret, this._path, ...args];
         this.echo("emit", key, ...reArgs);
         this.echo("emit " + key, ...reArgs);
@@ -34,8 +34,7 @@ function reflect(path = "", advanced?: boolean) {
       if (originalSetter)
         originalSetter.call(this, value)
 
-      if (this.diff(this._target, this._path))
-        this.update(this._target, undefined, advanced);
+      this.update(this._target, this._path, advanced);
       this._path = remember;
       args = [this._path, value, this._target, this._value];
       this.echo("set", key, ...args);
@@ -73,7 +72,7 @@ class Sub<T> {
 
   constructor(
     defaultData: T = { } as T,
-    name: string = "Sub",
+    name: string = "sub",
   ) {
     this._name = name;
     this._debug = (window.localStorage.getItem("@tty-pt/sub/" + name + "/debug") ?? "").split(",");
@@ -137,23 +136,17 @@ class Sub<T> {
     window.localStorage.setItem("@tty-pt/sub/" + this._name + "/debug", this._debug.join(","));
   }
 
-  diff(obj: any, path: string = "") {
-    const old = path ? get(this._value, path) : this._value;
-    return old !== obj;
-  }
-
-  update(obj: T|any, path: string = this._path, advanced: boolean = false) {
+  update(obj: T|any, path: string = "", advanced: boolean = false) {
     const resolved = this.replace(path);
     let change = false;
     this.echo("pre update", obj, path, resolved);
 
     change = obj !== this.get(path);
-    const ret = this.set(obj, advanced ? "" : this.replace(path));
+    const ret = this.set(obj, advanced ? "" : resolved);
 
     for (const [sub, path] of this._subs) {
       const value = this.get(path, ret);
-      const resolved = this.replace(path);
-      if (this.diff(value, resolved)) {
+      if (this.get(path) !== value) {
         sub(value);
         change = true;
       }
@@ -186,13 +179,13 @@ class Sub<T> {
     }
   }
 
-  replace(path = this.index) {
+  replace(path = "") {
     const keys = path.split('/').map(key => key.split(".").map(ckey => this.parse(ckey)).join("."));
     const realPath = keys.join("/");
     return this.echo("replace", realPath, path);
   }
 
-  get(path: string = this._path, value: T = this._value) {
+  get(path: string = "", value: T = this._value) {
     value = value ?? this._value;
     const realPath = this.replace(path);
     return this.echo("global get", path ? get(value, realPath) : value, path, realPath, value);
@@ -211,6 +204,15 @@ class Sub<T> {
     const [value, setValue] = useState(this.get(path));
     useEffect(() => this.subscribe(setValue, path), [path]);
     return this.echo("use", value, path);
+  }
+
+  with<T>(path = "", Component: ComponentType) {
+    const WithSub = (props: T) => {
+      const sub = this.use(path);
+      const reprops = { ...props, [this._name]: sub };
+      return <Component { ...reprops } />;
+    };
+    return WithSub;
   }
 
   makeEmit(cb: Function = (a: any) => a, path: string = "") {
