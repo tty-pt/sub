@@ -2,18 +2,16 @@
   "name": "@tty-pt/sub",
   "version": "2.0.10",
   "description": "",
-  "main": "dist/main.amd.js",
-  "module": "dist/main.js",
-  "types": "./src/main.d.ts",
+  "main": "./dist/main.umd.js",
+  "module": "./dist/main.js",
+  "types": "./dist/main.d.ts",
   "entry": "./src/main.tsx",
-  "library": true,
   "exports": {
     ".": {
       "default": "./dist/main.js"
     },
     "./package.json": "./package.json",
-    "./dist/*": "./dist/*",
-    "./src/*": "./src/*"
+    "./dist/*": "./dist/*"
   },
   "scripts": {
     "build": "tsc && scripts build"
@@ -35,15 +33,15 @@
   },
   "homepage": "https://github.com/tty-pt/sub#readme",
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
   "devDependencies": {
-    "@tty-pt/scripts": "^0.2.4",
+    "@tty-pt/scripts": "^0.2.6",
     "@types/lodash": "^4.14.200",
-    "@types/react": "^16.14.45",
-    "react": "^16.14.0",
-    "react-dom": "^16.14.0",
+    "@types/node": "^20.10.0",
+    "@types/react": "^17.0.71",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "typescript": "^5.2.2"
   },
   "peerDependencies": {
