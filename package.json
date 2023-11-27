@@ -1,11 +1,16 @@
 {
   "name": "@tty-pt/sub",
-  "version": "2.2.11",
+  "version": "2.2.13",
   "description": "",
-  "main": "./dist/sub.umd.js",
-  "module": "./dist/sub.js",
-  "types": "./dist/main.d.ts",
-  "entry": "./src/main.tsx",
+  "main": "dist/sub.umd.js",
+  "module": "dist/sub.js",
+  "!module": true,
+  "types": "./dist/sub.d.ts",
+  "entry": "./src/sub.tsx",
+  "external": {
+    "react": "React",
+    "lodash": "_"
+  },
   "scripts": {
     "build": "tsc && scripts build"
   },
@@ -29,19 +34,20 @@
     "dist"
   ],
   "devDependencies": {
-    "@tty-pt/scripts": "^0.4.9",
+    "@tty-pt/scripts": "^0.4.11",
     "@types/lodash": "^4.14.200",
-    "@types/node": "^20.10.0",
-    "@types/react": "^17.0.71",
+    "@types/node": "^20.11.7",
+    "@types/react": "^18.2.48",
+    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typescript": "^5.2.2"
   },
-  "peerDependencies": {
+  "optionalDependencies": {
     "react": ">= 16.0.0 < 20.0.0",
     "react-dom": ">= 16.0.0 < 20.0.0"
   },
-  "dependencies": {
+  "peerDependencies": {
     "lodash": "^4.17.21"
   }
 }

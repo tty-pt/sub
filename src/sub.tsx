@@ -221,3 +221,71 @@ class Sub<T> {
     }
   }
 }
+
+export
+class SubscribedElement extends HTMLElement {
+  unsubscribes: Function[] = [];
+  timeout?: NodeJS.Timeout;
+
+  subscribe<T>(subscription: Sub<T>, updateFun: Function|string, path: string = "") {
+    const initial = subscription.get(path);
+
+    if (typeof updateFun === "function")
+      updateFun.call(this, initial);
+    else
+      this[updateFun] = initial;
+
+    const unsubscribe = subscription.subscribe(
+      typeof updateFun === "function" ? ((newValue: any) => {
+        updateFun.call(this, newValue);
+        this.pend();
+      }) : ((newValue: any) => {
+        this[updateFun] = newValue;
+        this.pend();
+      }), path);
+    this.unsubscribes.push(unsubscribe);
+    this.pend();
+  }
+
+  pend() {
+    if (this.timeout)
+      return;
+
+    this.timeout = setTimeout(() => {
+      this.render();
+      this.timeout = undefined;
+    }, 0);
+  }
+
+  unsubscribeAll() {
+    for (const unsubscribe of this.unsubscribes)
+      unsubscribe();
+    this.unsubscribes = [];
+  }
+
+  attributeChangedCallback() {
+    this.render();
+  }
+
+  connectedCallback() {
+    this.render();
+  }
+
+  unpend() {
+    if (!this.timeout)
+      return;
+
+    clearTimeout(this.timeout);
+    this.timeout = undefined;
+  }
+
+  render() {
+    this.unpend();
+  }
+
+  disconnectedCallback() {
+    this.unsubscribeAll();
+  }
+}
+
+export default { Sub, SubscribedElement };
