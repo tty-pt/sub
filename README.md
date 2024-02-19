@@ -5,6 +5,32 @@ This helps you have state outside of your components, like Redux, but simpler.
 Take this example:
 ```js
 import React, { useRef } from "react";
+import { Sub } from "@tty-pt/sub";
+
+const todoSub = new Sub([]);
+const addTodo = todoSub.makeEmit((todo, current) => current.concat([todo]));
+
+export default
+function Todos(props) {
+	const todos = todoSub.use();
+	const ref = useRef();
+
+	return <div>{
+		<div key="header">
+			<input ref={ref}></input>
+			<button onClick={() => {
+				addTodo(ref.current.value);
+				ref.current.value = "";
+			}}>add</button>
+		</div>
+		Object.entries(todos).map((text) => (<div key={text}>{text}</div>));
+	}</div>
+}
+```
+
+Can also be written like:
+```js
+import React, { useRef } from "react";
 import { Sub, reflect } from "@tty-pt/sub";
 
 class TodoSub extends Sub {
@@ -30,12 +56,11 @@ function Todos(props) {
 				ref.current.value = "";
 			}}>add</button>
 		</div>
-		Object.entries(todos).map(([key, value]) => (
-			<div key={key}>{value}</div>
-		));
+		Object.entries(todos).map((text) => (<div key={text}>{text}</div>));
 	}</div>
 }
 ```
+But you must enable legacy decorators for that to work.
 
 This will display a todo list. When you click the button, it will add the text from
 an input into the todo list.
@@ -66,7 +91,20 @@ todo.debug = ["emit add"];
 
 To see when "add" gets invoked, and what it returns.
 
-## reflect
+## Other shared state options
+
+### Context
+Context is not advantageous in the way that sub is. Because it redraws everything that depends on the context if it changes. So this would be more efficient.
+And it is also easier to write.
+
+### Redux
+Redux relies on having a big store where you keep all your application state. It means you write your application with this in mind, and your libraries too.
+You can't have little stores like this, which only concern your specific component or functionality.
+
+### Zustrand
+When I started developing this, I didn't know about Zustrand. But this ended up having some additional bells and whisles. Like the prop and method reflection and the debug tools.
+
+## reflect decorator
 This decorator will ensure that whatever it decorates has an impact on the internal state of the subscription.
 If need be, the components will be updated accordingly.
 

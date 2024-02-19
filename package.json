@@ -1,12 +1,13 @@
 {
   "name": "@tty-pt/sub",
-  "version": "2.2.13",
+  "version": "2.2.16",
   "description": "",
-  "main": "dist/sub.umd.js",
+  "main": "dist/sub.cjs.js",
+  "browser": "dist/sub.web.js",
   "module": "dist/sub.js",
-  "!module": true,
-  "types": "./dist/sub.d.ts",
-  "entry": "./src/sub.tsx",
+  "types": "dist/sub.d.ts",
+  "entry": "src/sub.tsx",
+  "library": "ttySub",
   "external": {
     "react": "React",
     "lodash": "_"
@@ -34,7 +35,7 @@
     "dist"
   ],
   "devDependencies": {
-    "@tty-pt/scripts": "^0.4.11",
+    "@tty-pt/scripts": "^0.6.0-9",
     "@types/lodash": "^4.14.200",
     "@types/node": "^20.11.7",
     "@types/react": "^18.2.48",
