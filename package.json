@@ -1,18 +1,25 @@
 {
   "name": "@tty-pt/sub",
-  "version": "2.2.13",
+  "version": "2.2.29",
   "description": "",
-  "main": "dist/sub.umd.js",
-  "module": "dist/sub.js",
-  "!module": true,
-  "types": "./dist/sub.d.ts",
-  "entry": "./src/sub.tsx",
+  "main": "cjs/sub.js",
+  "browser": "web/sub.js",
+  "module": "esm/sub.js",
+  "types": "types/sub.d.ts",
+  "entry": "src/sub.tsx",
+  "library": "ttySub",
+  "exports": {
+    ".": {
+      "import": "./esm/sub.js",
+      "default": "./cjs/sub.js"
+    }
+  },
   "external": {
     "react": "React",
     "lodash": "_"
   },
   "scripts": {
-    "build": "tsc && scripts build"
+    "build": "scripts build"
   },
   "repository": {
     "type": "git",
@@ -31,10 +38,13 @@
   },
   "homepage": "https://github.com/tty-pt/sub#readme",
   "files": [
-    "dist"
+    "cjs",
+    "web",
+    "esm",
+    "types"
   ],
   "devDependencies": {
-    "@tty-pt/scripts": "^0.4.11",
+    "@tty-pt/scripts": "^0.6.0-31",
     "@types/lodash": "^4.14.200",
     "@types/node": "^20.11.7",
     "@types/react": "^18.2.48",
