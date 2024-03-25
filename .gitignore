@@ -1,3 +1,6 @@
 /node_modules
-/dist
+/cjs
+/web
+/esm
+/types
 /stats.json

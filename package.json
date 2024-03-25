@@ -1,11 +1,11 @@
 {
   "name": "@tty-pt/sub",
-  "version": "2.2.16",
+  "version": "2.2.24",
   "description": "",
-  "main": "dist/sub.cjs.js",
-  "browser": "dist/sub.web.js",
-  "module": "dist/sub.js",
-  "types": "dist/sub.d.ts",
+  "main": "cjs/sub.js",
+  "browser": "web/sub.js",
+  "module": "esm/sub.js",
+  "types": "types/sub.d.ts",
   "entry": "src/sub.tsx",
   "library": "ttySub",
   "external": {
@@ -13,7 +13,7 @@
     "lodash": "_"
   },
   "scripts": {
-    "build": "tsc && scripts build"
+    "build": "scripts build"
   },
   "repository": {
     "type": "git",
@@ -32,10 +32,13 @@
   },
   "homepage": "https://github.com/tty-pt/sub#readme",
   "files": [
-    "dist"
+    "cjs",
+    "web",
+    "esm",
+    "types"
   ],
   "devDependencies": {
-    "@tty-pt/scripts": "^0.6.0-9",
+    "@tty-pt/scripts": "^0.6.0-18",
     "@types/lodash": "^4.14.200",
     "@types/node": "^20.11.7",
     "@types/react": "^18.2.48",

@@ -114,9 +114,8 @@ class Sub<T> {
       return path.substring(max + 1);
   }
 
-  @reflect()
   set url(value: string) {
-    this._target = this._url = value ? value.replace(".", "/") : "initial";
+      this.update(this._url = value ? value.replace(".", "/") : "initial", "url");
   }
 
   get url() {
@@ -206,8 +205,8 @@ class Sub<T> {
     return this.echo("use", value, path);
   }
 
-  with<T>(path = "", Component: ComponentType) {
-    const WithSub = (props: T) => {
+  with<P>(path = "", Component: ComponentType) {
+    const WithSub = (props: P) => {
       const sub = this.use(path);
       const reprops = { ...props, [this._name]: sub };
       return <Component { ...reprops } />;
