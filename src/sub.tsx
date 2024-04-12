@@ -216,7 +216,7 @@ class Sub<T> {
 
   makeEmit(cb: Function = (a: any) => a, path: string = "") {
     return (...args: any[]) => {
-      this.update(cb.call(this, ...args, this._value), path);
+      return this.update(cb.call(this, ...args, this._value), path);
     }
   }
 }
