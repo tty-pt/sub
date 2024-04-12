@@ -1,5 +1,5 @@
 {
-  "name": "@tty-pt/sub",
+  "name": "@mov-ai/mov-fe-lib-sub",
   "version": "2.2.30",
   "description": "",
   "main": "cjs/sub.js",
@@ -19,7 +19,8 @@
     "lodash": "_"
   },
   "scripts": {
-    "build": "scripts build"
+    "build": "scripts build",
+    "test": "echo no tests"
   },
   "repository": {
     "type": "git",
