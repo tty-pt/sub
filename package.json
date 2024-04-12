@@ -45,7 +45,7 @@
     "types"
   ],
   "devDependencies": {
-    "@tty-pt/scripts": "^0.6.0-31",
+    "@mov-ai/mov-fe-lib-scripts": "^0.6.0-36",
     "@types/lodash": "^4.14.200",
     "@types/node": "^20.11.7",
     "@types/react": "^18.2.48",
