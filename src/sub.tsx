@@ -205,6 +205,27 @@ class Sub<T> {
     return this.echo("use", value, path);
   }
 
+  static useDynamic(getOptions: () => object, dependencies: any[], path: string = "") {
+    const [sub, setSub] = useState({
+      use: (_path: string) => {
+        useState();
+        useEffect(() => {}, ["test"]);
+        // return undefined;
+      }
+    });
+
+    useEffect(() => {
+      const sub = new this(getOptions());
+
+      setSub(sub);
+      return () => sub.destroy();
+    }, dependencies);
+
+    return sub.use(path);
+  }
+
+  destroy() {}
+
   with<P>(path = "", Component: ComponentType) {
     const WithSub = (props: P) => {
       const sub = this.use(path);
