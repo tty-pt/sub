@@ -1,6 +1,6 @@
 {
   "name": "@mov-ai/mov-fe-lib-sub",
-  "version": "2.2.31-3",
+  "version": "2.2.31-4",
   "description": "",
   "main": "cjs/sub.js",
   "browser": "web/sub.js",
