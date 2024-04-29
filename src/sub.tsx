@@ -119,7 +119,7 @@ class Sub<T> {
   }
 
   get url() {
-    return (this._value as Value).url as string;
+    return this._url;
   }
 
   get value() {
