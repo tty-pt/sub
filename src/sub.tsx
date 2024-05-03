@@ -119,7 +119,7 @@ class Sub<T> {
   }
 
   get url() {
-    return (this._value as Value).url as string;
+    return this._url;
   }
 
   get value() {
@@ -204,6 +204,27 @@ class Sub<T> {
     useEffect(() => this.subscribe(setValue, path), [path]);
     return this.echo("use", value, path);
   }
+
+  static useDynamic(getOptions: () => object, dependencies: any[], path: string = "") {
+    const [sub, setSub] = useState({
+      use: (_path: string) => {
+        useState();
+        useEffect(() => {}, ["test"]);
+        // return undefined;
+      }
+    });
+
+    useEffect(() => {
+      const sub = new this(getOptions());
+
+      setSub(sub);
+      return () => sub.destroy();
+    }, dependencies);
+
+    return sub.use(path);
+  }
+
+  destroy() {}
 
   with<P>(path = "", Component: ComponentType) {
     const WithSub = (props: P) => {

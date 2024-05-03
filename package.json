@@ -1,6 +1,6 @@
 {
   "name": "@tty-pt/sub",
-  "version": "2.2.30",
+  "version": "2.2.31",
   "description": "",
   "main": "cjs/sub.js",
   "browser": "web/sub.js",
@@ -11,15 +11,17 @@
   "exports": {
     ".": {
       "import": "./esm/sub.js",
+      "types": "./types/sub.d.ts",
       "default": "./cjs/sub.js"
     }
   },
   "external": {
-    "react": "React",
-    "lodash": "_"
+    "react": "global React",
+    "lodash": "global _"
   },
   "scripts": {
-    "build": "scripts build"
+    "build": "scripts build",
+    "test": "echo no tests"
   },
   "repository": {
     "type": "git",
@@ -44,7 +46,7 @@
     "types"
   ],
   "devDependencies": {
-    "@tty-pt/scripts": "^0.6.0-31",
+    "@tty-pt/scripts": "^0.6.0-35",
     "@types/lodash": "^4.14.200",
     "@types/node": "^20.11.7",
     "@types/react": "^18.2.48",
