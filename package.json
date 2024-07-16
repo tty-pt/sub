@@ -1,6 +1,6 @@
 {
   "name": "@tty-pt/sub",
-  "version": "2.2.31",
+  "version": "2.2.40",
   "description": "",
   "main": "cjs/sub.js",
   "browser": "web/sub.js",
@@ -46,7 +46,7 @@
     "types"
   ],
   "devDependencies": {
-    "@tty-pt/scripts": "^0.6.0-35",
+    "@tty-pt/scripts": "^0.6.0-40",
     "@types/lodash": "^4.14.200",
     "@types/node": "^20.11.7",
     "@types/react": "^18.2.48",
