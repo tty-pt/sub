@@ -1,6 +1,6 @@
 {
   "name": "@mov-ai/mov-fe-lib-sub",
-  "version": "2.2.31-4",
+  "version": "2.2.40-0",
   "description": "",
   "main": "cjs/sub.js",
   "browser": "web/sub.js",
@@ -46,7 +46,7 @@
     "types"
   ],
   "devDependencies": {
-    "@mov-ai/mov-fe-lib-scripts": "^0.6.0-39",
+    "@mov-ai/mov-fe-lib-scripts": "^0.6.7-0",
     "@types/lodash": "^4.14.200",
     "@types/node": "^20.11.7",
     "@types/react": "^18.2.48",
