@@ -135,26 +135,56 @@ class Sub<T> {
     window.localStorage.setItem("@tty-pt/sub/" + this._name + "/debug", this._debug.join(","));
   }
 
+  getChanges(path, obj) {
+    const prefix = path ? path + "." : "";
+    const changes = {};
+    if (!obj)
+      return {};
+
+    const existing = this.get(path);
+
+    if (this.get(path, obj) != existing) {
+      const parts = path.split("/");
+      for (let i = 0; i < parts.length + 1; i++)
+        changes[parts.slice(0, i).join("/")] = true;
+      if (existing === undefined)
+        return changes;
+    }
+
+    for (const key in existing) {
+      const subObj = this.get(prefix + key, obj);
+      const existing = this.get(prefix + key);
+      if (this.get(prefix + key) != subObj)
+        changes[prefix + key] = true;
+      if (existing !== undefined && typeof subObj === "object")
+        Object.assign(changes, this.getChanges(prefix + key, obj));
+    }
+
+    return changes;
+  }
+
   update(obj: T|any, path: string = "", advanced: boolean = false) {
     const resolved = this.replace(path);
     let change = false;
     this.echo("pre update", obj, path, resolved);
 
-    change = obj !== this.get(path);
-    const ret = this.set(advanced ? "" : resolved, obj);
+    const old = this.get(path);
+    const repath = advanced ? "" : resolved;
+    const target = repath ? set(cloneDeep(this._value), repath, obj) : obj;
+    const changes = this.getChanges(repath, target);
+    const changed = !!Object.keys(changes).length;
 
     for (const [sub, path] of this._subs) {
-      const value = this.get(path, ret);
-      if (this.get(path) !== value) {
+      const value = this.get(path, target);
+      if (changes[path])
         sub(value);
-        change = true;
-      }
     }
 
-    if (change)
-      this._value = ret;
+    if (changed)
+      this._value = this.set(repath, obj);
 
-    return this.echo("update", advanced ? this.get(path, ret) : ret, path, resolved, obj, ret, this._value);
+    this.echo("update", path, changes, target, changed, this._value);
+    return this._value;
   }
 
   current() {
@@ -162,7 +192,7 @@ class Sub<T> {
   }
 
   set(path: string = "", value: any) {
-    const ret = path ? set(cloneDeep(this._value as any), path, value) : value;
+    const ret = path ? set(this._value as any, path, value) : value;
     this.echo("global set", path, value, ret);
     return ret;
   }
