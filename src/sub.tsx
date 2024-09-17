@@ -144,9 +144,7 @@ class Sub<T> {
     const existing = this.get(path);
 
     if (this.get(path, obj) != existing) {
-      const parts = path.split("/");
-      for (let i = 0; i < parts.length + 1; i++)
-        changes[parts.slice(0, i).join("/")] = true;
+      changes[path] = true;
       if (existing === undefined)
         return changes;
     }

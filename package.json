@@ -1,6 +1,6 @@
 {
   "name": "@tty-pt/sub",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "",
   "main": "cjs/sub.js",
   "browser": "web/sub.js",
