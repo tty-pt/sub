@@ -136,26 +136,27 @@ class Sub<T> {
   }
 
   getChanges(path, obj) {
-    const prefix = path ? path + "/" : "";
+    const prefix = path ? path + "." : "";
     const changes = {};
     if (!obj)
       return {};
 
-    if (this.get(path, obj) != this.get(path)) {
+    const existing = this.get(path);
+
+    if (this.get(path, obj) != existing) {
       const parts = path.split("/");
       for (let i = 0; i < parts.length + 1; i++)
         changes[parts.slice(0, i).join("/")] = true;
+      if (existing === undefined)
+        return changes;
     }
 
-    for (const key in this.get(path, obj)) {
+    for (const key in existing) {
       const subObj = this.get(prefix + key, obj);
-      if (this.get(prefix + key) !== subObj) {
+      const existing = this.get(prefix + key);
+      if (this.get(prefix + key) != subObj)
         changes[prefix + key] = true;
-        const parts = [path].concat(key.split("/"));
-        for (let i = 0; i < parts.length + 1; i++)
-          changes[prefix + parts.slice(0, i).join("/")] = true;
-      }
-      if (typeof subObj === "object")
+      if (existing !== undefined && typeof subObj === "object")
         Object.assign(changes, this.getChanges(prefix + key, obj));
     }
 
