@@ -152,8 +152,17 @@ class Sub<T> {
     for (const key in existing) {
       const subObj = this.get(prefix + key, obj);
       const existing = this.get(prefix + key);
+
+      if (typeof subObj === 'function'
+          || typeof existing === 'function') {
+
+        changes[prefix + key] = true;
+        continue;
+      }
+
       if (this.get(prefix + key) != subObj)
         changes[prefix + key] = true;
+
       if (existing !== undefined && typeof subObj === "object")
         Object.assign(changes, this.getChanges(prefix + key, obj));
     }
