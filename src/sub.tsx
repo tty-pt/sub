@@ -152,8 +152,17 @@ class Sub<T> {
     for (const key in existing) {
       const subObj = this.get(prefix + key, obj);
       const existing = this.get(prefix + key);
+
+      if (typeof subObj === 'function'
+          || typeof existing === 'function') {
+
+        changes[prefix + key] = true;
+        continue;
+      }
+
       if (this.get(prefix + key) != subObj)
         changes[prefix + key] = true;
+
       if (existing !== undefined && typeof subObj === "object")
         Object.assign(changes, this.getChanges(prefix + key, obj));
     }
@@ -176,8 +185,11 @@ class Sub<T> {
         sub(value);
     }
 
-    if (changed)
-      this._value = this.set(repath, obj);
+    if (changed) {
+      const ret = repath ? set(this._value as any, repath, obj) : obj;
+      this.echo("global set", repath, obj, ret);
+      this._value = ret;
+    }
 
     this.echo("update", path, changes, target, changed, this._value);
     return this._value;
@@ -185,12 +197,6 @@ class Sub<T> {
 
   current() {
     return this._value;
-  }
-
-  set(path: string = "", value: any) {
-    const ret = path ? set(this._value as any, path, value) : value;
-    this.echo("global set", path, value, ret);
-    return ret;
   }
 
   parse(key: string) {
