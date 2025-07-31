@@ -2,7 +2,7 @@ import React, { useEffect, useState, ComponentType } from "react";
 import { cloneDeep, set, get } from "lodash";
 
 export
-function reflect(path = "", advanced?: boolean) {
+function reflect(path = "") {
   return function (_target: any, key: string, descriptor: any) {
     if (descriptor.value && typeof descriptor.value === 'function') {
       const originalMethod = descriptor.value;
@@ -34,7 +34,7 @@ function reflect(path = "", advanced?: boolean) {
       if (originalSetter)
         originalSetter.call(this, value)
 
-      this.update(this._target, this._path, advanced);
+      this.update(this._target, this._path);
       this._path = remember;
       args = [this._path, value, this._target, this._value];
       this.echo("set", key, ...args);
@@ -161,13 +161,11 @@ class Sub<T> {
     return changes;
   }
 
-  update(obj: T|any, path: string = "", advanced: boolean = false) {
-    const resolved = this.replace(path);
+  update(obj: T|any, path: string = "") {
     let change = false;
-    this.echo("pre update", obj, path, resolved);
+    this.echo("pre update", obj, path);
 
-    const old = this.get(path);
-    const repath = advanced ? "" : resolved;
+    const repath = path ? this.replace(path) : "";
     const target = repath ? set(cloneDeep(this._value), repath, obj) : obj;
     const changes = this.getChanges(repath, target);
     const changed = !!Object.keys(changes).length;
